@@ -10,6 +10,7 @@ export class Destination {
     type: 'varchar',
     length: 255,
     nullable: false,
+    unique: true, // 중복되는 이름의 여행지가 있을 수 없기 때문에 unique 제약 조건 추가
   })
   name: string;
 
