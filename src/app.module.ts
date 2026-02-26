@@ -14,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.local',
+      envFilePath: `env.${process.env.NODE_ENV || 'local'}`,
       load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
