@@ -43,6 +43,7 @@ export class BucketListsController {
     @Req() req: Request,
     @Param('id', ParseIntPipe) id: number,
   ) {
+    console.log('req', req);
     const userId = req.user!.sub;
 
     return this.bucketListsService.findById(userId, id);

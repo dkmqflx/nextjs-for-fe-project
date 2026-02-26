@@ -8,7 +8,7 @@ export class BucketListItem {
   id: number;
 
   @ManyToOne(() => BucketList, (bucketList) => bucketList.items)
-  bucketList: BucketList;
+  bucketList?: BucketList;
 
   @ManyToOne(() => Destination, (destination) => destination.bucketListItems)
   destination: Destination;
