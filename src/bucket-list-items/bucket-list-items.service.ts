@@ -88,6 +88,9 @@ export class BucketListItemsService {
         bucketList: { id: bucketListId, user: { id: userId } },
         // 두가지가 모두 일치하는 버킷리스트 아이템을 조회한다.
       },
+      //relations: ['destination'],
+      // -> destination 컬럼을 join 하여 조회한다.
+      // 이렇게 매번 옵션을 전달할 필요 없이 entity 파일에서 설정해줄 수 있다
     });
   }
 
