@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { DestinationsService } from './destinations.service';
 import { CreateDestinationDto } from './dto/create-destination.dto';
@@ -32,6 +33,12 @@ export class DestinationsController {
   @Get('')
   async findAllDestinations() {
     return this.destinationsService.findAll();
+  }
+
+  @Get('search')
+  async searchDestinations(@Query('q') q: string) {
+    // 쿼리 파라미터를 받기 위한 데코레이터: @Query('q') q: string
+    return this.destinationsService.search(q);
   }
 
   // 4.	**여행지 상세 조회 API** - 특정 여행지의 세부 정보를 조회하는 API 구현 (GET /destinations/:id)

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateDestinationDto } from './dto/create-destination.dto';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Destination } from './entities/destination.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -56,6 +56,16 @@ export class DestinationsService {
     // 여기서 findOneBy를 사용한 이유는 위에서 중복되는 이름의 여행지가 있을 수 없기 때문이다.
 
     // 아무것도 없을 때 404를 반환할지, 이렇게 아무것도 없는 응답을 보낼지는 선택
+  }
+
+  async search(q: string): Promise<Destination[]> {
+    return this.destinationsRepository.find({
+      where: {
+        name: Like(`%${q}%`),
+        // Like 쿼리는 문자열 검색에 사용되는 쿼리로, %는 와일드카드 문자로 모든 문자열을 의미한다.
+        // 예를 들어, %q%는 q로 시작하거나 끝나거나 포함하는 모든 문자열을 검색한다.
+      },
+    });
   }
 
   // 5.	**여행지 삭제 API** - 특정 여행지 삭제 API 구현 (DELETE /destinations/:id)
