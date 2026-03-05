@@ -59,12 +59,17 @@ export class DestinationsService {
   }
 
   async search(q: string): Promise<Destination[]> {
+    // name 뿐 아니라 description에도 검색을 할 수 있도록 한다.
+    // name에 포함되거나, description에 포함되는 여행지를 찾는다.
     return this.destinationsRepository.find({
-      where: {
-        name: Like(`%${q}%`),
-        // Like 쿼리는 문자열 검색에 사용되는 쿼리로, %는 와일드카드 문자로 모든 문자열을 의미한다.
-        // 예를 들어, %q%는 q로 시작하거나 끝나거나 포함하는 모든 문자열을 검색한다.
-      },
+      where: [
+        {
+          name: Like(`%${q}%`),
+        },
+        {
+          description: Like(`%${q}%`),
+        },
+      ],
     });
   }
 

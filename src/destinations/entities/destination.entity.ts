@@ -1,7 +1,13 @@
 import { BucketListItem } from 'src/bucket-list-items/entities/bucket-list-item.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 @Entity()
+@Index('idx_destination_description', ['description']) // name은 unique 제약 조건이 있기 때문에 Index가 만들어져 있을 것, 그러므로 description에만 Index를 만들어준다.
 export class Destination {
   @PrimaryGeneratedColumn()
   id: number;
