@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -7,12 +8,14 @@ import { CreateDestinationDto } from './dto/create-destination.dto';
 import { Repository, Like } from 'typeorm';
 import { Destination } from './entities/destination.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 @Injectable()
 export class DestinationsService {
   constructor(
     @InjectRepository(Destination)
     private readonly destinationsRepository: Repository<Destination>,
+    @Inject(CACHE_MANAGER) // 캐시 서비스를 사용하기 위해서 주입
+    private readonly cacheManager: Cache,
   ) {}
 
   // 2.	**여행지 등록 API** - 새로운 여행지 등록 API 구현 (POST /destinations)
@@ -59,9 +62,16 @@ export class DestinationsService {
   }
 
   async search(q: string): Promise<Destination[]> {
-    // name 뿐 아니라 description에도 검색을 할 수 있도록 한다.
-    // name에 포함되거나, description에 포함되는 여행지를 찾는다.
-    return this.destinationsRepository.find({
+    // const cachedResult: any = await this.cacheManager.get(`search-${q}`);
+
+    // 캐시 결과가 있을 때는 캐시 결과를 반환한다.
+    // if (cachedResult) {
+    //   return cachedResult;
+    // }
+
+    // 캐시 처리를 하게 되면, GET 요청시, 첫번째 요청 후 두번째 요청을 하게되면, 첫번째 요청에 비해 빠른 응답을 받을 수 있다.
+
+    const result = await this.destinationsRepository.find({
       where: [
         {
           name: Like(`%${q}%`),
@@ -71,6 +81,14 @@ export class DestinationsService {
         },
       ],
     });
+
+    // await this.cacheManager.set(`search-${q}`, result, 1000 * 10);,
+
+    // 주석처리한 부분처럼 코드를 작성하지 않고도
+    // controller에서 데코레이터만 사용해서 캐싱 처리를 할 수 있다
+    // 다만 복잡하거나 커스텀한 캐싱 처리를 할 때는 서비스 레이어에서 처리하는 것이 더 나은 경우도 있다
+
+    return result;
   }
 
   // 5.	**여행지 삭제 API** - 특정 여행지 삭제 API 구현 (DELETE /destinations/:id)
