@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "nest build && npm run sentry:sourcemaps",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -28,7 +28,8 @@
     "migration:generate:prod": "NODE_ENV=production npm run typeorm -- -d ./src/config/typeorm.ts migration:generate ./src/migrations/$npm_config_name",
     "migration:create:prod": "NODE_ENV=production npm run typeorm -- migration:create ./src/migrations/$npm_config_name",
     "migration:revert:prod": "NODE_ENV=production npm run typeorm -- -d ./src/config/typeorm.ts migration:revert",
-    "migration:show:prod": "NODE_ENV=production npm run typeorm -- -d ./src/config/typeorm.ts migration:show"
+    "migration:show:prod": "NODE_ENV=production npm run typeorm -- -d ./src/config/typeorm.ts migration:show",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org oriental-melon --project node-nestjs dist && sentry-cli sourcemaps upload --org oriental-melon --project node-nestjs dist"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.1.0",
@@ -41,6 +42,9 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/schedule": "^6.1.1",
     "@nestjs/typeorm": "^11.0.0",
+    "@sentry/cli": "^2.58.5",
+    "@sentry/nestjs": "^10.42.0",
+    "@sentry/profiling-node": "^10.42.0",
     "@types/passport-jwt": "^4.0.1",
     "argon2": "^0.44.0",
     "cache-manager": "^7.2.8",
