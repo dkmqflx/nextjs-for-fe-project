@@ -33,7 +33,11 @@ export class UsersService {
     await this.userRepository.update(id, updateUserDto);
     return this.findById(id);
   }
-  wk;
+
+  async countAll(): Promise<number> {
+    return this.userRepository.count();
+  }
+
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }

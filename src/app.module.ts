@@ -11,6 +11,9 @@ import typeorm from './config/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
+import { JobsModule } from './jobs/jobs.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,11 +29,13 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     CacheModule.register({
       isGlobal: true,
     }), // 전역적으로 CacheModule을 사용하기 위해서 설정
+    ScheduleModule.forRoot(), // 라이브러리 설치 후에는 이렇게 모듈을 등록해주어야 한다. forRoot 해주면 모든 서비스에서 스케쥴러와 관련된 데코레이터를 사용할 수 있게 된다
     UsersModule,
     DestinationsModule,
     BucketListsModule,
     BucketListItemsModule,
     AuthModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [
